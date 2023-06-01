@@ -1,0 +1,133 @@
+                                      //  Task-1 SQL
+//In the attachment above, use each worksheet as a table in a relational database and write an SQL query that generates the output report
+
+//Fetch top 3 departments along with their name and average monthly salary. Below is the format of the report.
+
+//    DEPT_NAME    AVG_MONTHLY_SALARY (USD)
+
+
+Solution - 
+Select d.NAME as "DEPT_NAME", avg(s.AMT) as "AVG_MONTHLY_SALARY (USD)" from Salaries as s
+join Employees as e  On e.id=s.EMP_ID
+Join Departments as d  On d.ID=e.DEPT_ID
+Group by d.Name
+order by avg(s.AMT) desc limit 3 ;
+               
+
+
+
+                                         //   Task-2 Scripting
+// With the same attachment, use each worksheet as a CSV file and write a script (Bash or Python) that
+// generates the same report. Data is to be read from the CSV files not from a database.
+
+                              
+          Solution -
+          import pandas as pd    
+
+          // Read the CSV files into DataFrames....
+
+          departments=pd.read_csv("C:/Users/Lenovo/Desktop/OnlineSales_assignment/Departments.csv")   
+          employees=pd.read_csv("C:/Users/Lenovo/Desktop/assignment/Employees.csv")
+          salaries=pd.read_csv("C:/Users/Lenovo/Desktop/assignment/Salaries.csv")
+
+          //  Merge the DataFrames on the `ID` and `DEPT_ID` columns...
+              df=pd.merge(departments,employees, left_on='ID',right_on='DEPT_ID')
+
+          // Merge the DataFrames on the `ID_y` and `EMP_ID` columns.  
+          data= pd.merge(df,salaries,left_on="ID_y",right_on='EMP_ID')
+
+          //  Group the DataFrame by name and calculate the mean salary.
+              x=data.groupby(['NAME_x'])['AMT'].mean()
+
+         //   Sort the DataFrame by mean salary in descending order...
+              x.sort_values(ascending=False).head(3)
+
+          // data :  
+          ID_x	NAME_x	ID_y	NAME_y	DEPT_ID	EMP_ID	MONTH	AMT	month_paart
+          0	1	HR	1	Jack	1	1	14-08-2453	5000	NaN
+          1	1	HR	1	Jack	1	1	15-08-2453	5000	NaN
+          2	1	HR	2	John	1	2	14-08-2453	4000	NaN
+          3	1	HR	2	John	1	2	15-08-2453	4000	NaN
+          4	1	HR	10	Shirley	1	10	14-08-2453	4800	NaN
+          ...	...	...	...	...	...	...	...	...	...
+          166	5	Sales	16	Howard	5	16	20-11-2453	7500	NaN
+          167	5	Sales	16	Howard	5	16	21-11-2453	7500	NaN
+          168	5	Sales	21	Bruce	5	21	19-11-2453	4800	NaN
+          169	5	Sales	21	Bruce	5	21	20-11-2453	4800	NaN
+          170	5	Sales	21	Bruce	5	21	21-11-2453	4800	NaN
+          171 rows x 9 columns
+
+          //output: final table.......................
+
+          NAME_x
+          Sales      7045.16129
+          Ops        6420.00000
+          Finance    6360.31746
+          Name: AMT, dtype: float64
+
+
+  
+                                        
+                                         //Task-3 Debugging
+//Given below is a Bash / Python script that performs following computation on an integer input (n):
+// 1. If n is less than 10: Calculate its Square
+//    Example: 4 => 16
+// 2. If n is between 10 and 20: Calculate the factorial of (n-10)
+//    Example: 15 => 120
+// 3. If n is greater than 20: Calculate the sum of all integers between 1 and (n-20)
+//    Example: 25 => 15
+//  The task is to identify the bugs in the script, fix them and share the new script. Only one of the two scripts required Bash or Python. Hint: You can correct the script by only changing 3-4 characters.
+
+// Script (Python)
+
+def compute(n):
+    if n < 10:
+        out = n ** 2
+    elif n < 20:
+        out = 1
+         for i in range(1, n-10):   // for i in range(1, n-10+1):
+            out *= i
+    else:
+        lim = n - 20
+        out = lim * lim
+        out = out - lim
+        out = out / 2    //  out = out // 2 
+    print(out)
+
+
+    // Correct Script:
+
+    //def compute(n):
+    if n < 10:
+        out = n ** 2
+    elif n < 20:
+        out = 1
+        for i in range(1, n-10+1):
+            out *= i
+    else:
+        lim = n - 20 
+        out = lim * lim
+        out = out + lim
+        out = out //2 
+    print(out)
+
+
+    n = int(input("Enter an integer: "))
+    compute(n)
+
+    In this corrected version, I made the following changes:
+
+    1. In the second case (n < 20), I corrected the range of the for loop to
+      include n - 10 by adding 1 to n - 10 in the range.
+    2. In the third case (n > 20), I changed the subtraction operation to 
+       addition when calculating out = out + lim.
+    3. Finally, I used the floor division operator // instead of the regular
+       division operator / to ensure the result is an integer.
+
+    //  edge case: The factorial function is not defined recursively. The base case is when n is 0.
+        In this case, the factorial of n is 1. The recursive case is when n is greater than 0. 
+        In this case, the factorial of n is equal to n times the factorial of n-1.
+
+
+
+
